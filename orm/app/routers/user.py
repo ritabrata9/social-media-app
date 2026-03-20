@@ -5,9 +5,12 @@ from app.schemas import UserCreate, UserOut
 from app.utils import hash_password
 from fastapi import HTTPException, Depends, APIRouter
 
-router = APIRouter()
+router = APIRouter(
+    prefix = "/users",
+    tags = ['Users']
+)
 
-@router.post("/users", status_code=201, response_model = UserOut)
+@router.post("/", status_code=201, response_model = UserOut)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
     #hash the password    
@@ -20,7 +23,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 # GET /users/{id} — returns a single user info by id
-@router.get("/users/{id}", response_model = UserOut)
+@router.get("/{id}", response_model = UserOut)
 def get_post(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()  # SELECT * FROM users WHERE id = %s
     if not user:
