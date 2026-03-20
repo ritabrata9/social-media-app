@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app import models
+from app import models, oauth2
 from app.schemas import PostCreate, PostResponse
 from typing import List
 from fastapi import HTTPException, Depends, APIRouter
@@ -31,7 +31,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
 # POST /posts — creates a new post from the request body
 # status 201 = Created
 @router.post("/", status_code=201, response_model=PostResponse)
-def create_post(post: PostCreate, db: Session = Depends(get_db)):
+def create_post(post: PostCreate, db: Session = Depends(get_db), get_current_user:int = Depends(oauth2.get_current_user)):
     # unpack the Pydantic model into the SQLAlchemy model using **post.model_dump()
     # equivalent to: Post(title=post.title, content=post.content, published=post.published)
     new_post = models.Post(**post.model_dump())

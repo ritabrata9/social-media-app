@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-
+from typing import Optional
 
 # PostCreate validates the incoming request body for create and update routes
 # FastAPI runs this validation automatically before your route function executes
@@ -39,8 +39,10 @@ class UserLogin(BaseModel):
     email:EmailStr
     password:str
 
-    class Config:
-        from_attributes = True
 
+class Token(BaseModel):
+    access_token : str
+    token_type : str
 
-    
+class TokenData(BaseModel):
+    id : Optional[str] = None
