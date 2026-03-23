@@ -18,6 +18,7 @@ class PostResponse(BaseModel):
     content: str
     published: bool
     created_at: datetime  # included since it's set by postgres automatically on insert
+    user_id: int
 
     # tells Pydantic to read data from SQLAlchemy model attributes
     # without this, Pydantic wouldn't know how to parse an ORM object
