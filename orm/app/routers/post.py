@@ -11,22 +11,23 @@ router = APIRouter(
 )
 
 
-#! GET /posts — returns all posts
+#! GET /posts — returns all posts of a particular user
 # Depends(get_db) injects a fresh database session for this request
 # List[PostResponse] tells FastAPI to serialize each result using PostResponse
 @router.get("/", response_model=List[PostResponse])
-def get_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()  # SELECT * FROM posts
+def get_posts(db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
+
+    posts = db.query(models.Post).filter(models.Post.user_id == current_user.id).all()
     return posts
 
 
-#! GET /posts/{id} — returns a single post by id
-@router.get("/{id}", response_model=PostResponse)
-def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    post = db.query(models.Post).filter(models.Post.id == id).first()  # SELECT * FROM posts WHERE id = %s
-    if not post:
-        raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
-    return post
+# #! GET /posts/{id} — returns a single post by id
+# @router.get("/{id}", response_model=PostResponse)
+# def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+#     post = db.query(models.Post).filter(models.Post.id == id).first()  # SELECT * FROM posts WHERE id = %s
+#     if not post:
+#         raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
+#     return post
 
 
 #! POST /posts — CREATES a new post from the request body
