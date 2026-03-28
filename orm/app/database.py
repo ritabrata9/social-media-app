@@ -14,6 +14,9 @@ DATABASE_URL = (
     f"@{os.getenv('DATABASE_HOSTNAME')}:{os.getenv('DATABASE_PORT')}/{os.getenv('DATABASE_NAME')}"
 )
 
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
+
 # engine is the core connection to the database — equivalent to psycopg2.connect()
 # it manages the connection pool under the hood
 engine = create_engine(DATABASE_URL)
