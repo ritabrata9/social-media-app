@@ -39,7 +39,7 @@ def create_post(
     if is_disallowed(text):
         raise HTTPException(
             status_code=403,
-            detail="Post rejected: Disrespect towards supreme leader is not allowed."
+            detail="Post rejected: Disrespect towards the Supreme Leader is not allowed."
         )
 
     new_post = models.Post(
