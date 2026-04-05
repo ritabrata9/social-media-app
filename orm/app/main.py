@@ -30,6 +30,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/debug/db-confirm")
+def confirm():
+    result = db.execute("SELECT current_database();").fetchall()
+    return {"db": result}
 
 app.include_router(post.router)
 app.include_router(user.router)
